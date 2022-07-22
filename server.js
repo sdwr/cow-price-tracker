@@ -1,0 +1,27 @@
+require('app-module-path').addPath(__dirname);
+require('dotenv').config();const express = require('express')
+
+const cors = require('cors');
+const http = require('http');
+const bodyParser = require('body-parser');
+const moment = require('moment');
+
+
+const app = express();
+app.use(cors());
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(require('./routes'));
+
+const server = http.createServer(app);
+
+app.
+
+
+//run server
+server.listen(process.env.PORT || 8080, function init() {
+	console.log(`server started on port ${server.address().port}`);
+});
+
