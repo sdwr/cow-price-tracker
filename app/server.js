@@ -1,5 +1,6 @@
 require('app-module-path').addPath(__dirname);
-require('dotenv').config();const express = require('express')
+require('dotenv').config();
+const express = require('express');
 
 const cors = require('cors');
 const http = require('http');
@@ -16,8 +17,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(require('./routes'));
 
 const server = http.createServer(app);
-
-app.
 
 
 //run server
