@@ -1,0 +1,8 @@
+{
+    "name": "Milky Way Price Tracker",
+    "buildpacks": [
+        {
+            "url": "heroku/nodejs"
+        }
+    ]
+}
