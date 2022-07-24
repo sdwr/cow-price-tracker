@@ -8,4 +8,4 @@ const OrderHistorySchema = new mongoose.Schema({
     lastUpdated: Number
 });
 
-mongoose.model('OrderHistory', OrderHistorySchema);
+module.exports = mongoose.model('OrderHistory', OrderHistorySchema);

@@ -7,6 +7,7 @@ const http = require('http');
 const bodyParser = require('body-parser');
 const moment = require('moment');
 
+require('./models/orderHistory');
 
 const app = express();
 app.use(cors());
@@ -14,6 +15,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+
+app.use(express.static(__dirname + '/web'));
 app.use(require('./routes'));
 
 const server = http.createServer(app);
