@@ -1,0 +1,35 @@
+<svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+<line x1="42.6134" y1="7.25342" x2="49.0758" y2="13.7158" stroke="#898989" stroke-width="2" stroke-linecap="round"/>
+<line x1="42.6134" y1="7.25342" x2="49.0758" y2="13.7158" stroke="white" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round"/>
+<line x1="37.1851" y1="19.2334" x2="43.6475" y2="25.6958" stroke="#898989" stroke-width="2" stroke-linecap="round"/>
+<line x1="37.1851" y1="19.2334" x2="43.6475" y2="25.6958" stroke="white" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round"/>
+<line x1="23.4008" y1="29.0796" x2="29.8632" y2="35.542" stroke="#898989" stroke-width="2" stroke-linecap="round"/>
+<line x1="23.4008" y1="29.0796" x2="29.8632" y2="35.542" stroke="white" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round"/>
+<line x1="19.1741" y1="30.7603" x2="25.6365" y2="37.2227" stroke="#898989" stroke-width="2" stroke-linecap="round"/>
+<line x1="19.1741" y1="30.7603" x2="25.6365" y2="37.2227" stroke="white" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round"/>
+<line x1="27.3391" y1="27.1104" x2="33.8016" y2="33.5728" stroke="#898989" stroke-width="2" stroke-linecap="round"/>
+<line x1="27.3391" y1="27.1104" x2="33.8016" y2="33.5728" stroke="white" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round"/>
+<line x1="31.2775" y1="25.1411" x2="37.7399" y2="31.6035" stroke="#898989" stroke-width="2" stroke-linecap="round"/>
+<line x1="31.2775" y1="25.1411" x2="37.7399" y2="31.6035" stroke="white" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round"/>
+<line x1="34.2312" y1="22.1875" x2="40.6936" y2="28.6499" stroke="#898989" stroke-width="2" stroke-linecap="round"/>
+<line x1="34.2312" y1="22.1875" x2="40.6936" y2="28.6499" stroke="white" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round"/>
+<line x1="39.1541" y1="15.2954" x2="45.6166" y2="21.7578" stroke="#898989" stroke-width="2" stroke-linecap="round"/>
+<line x1="39.1541" y1="15.2954" x2="45.6166" y2="21.7578" stroke="white" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round"/>
+<line x1="41.1233" y1="11.3569" x2="47.5857" y2="17.8194" stroke="#898989" stroke-width="2" stroke-linecap="round"/>
+<line x1="41.1233" y1="11.3569" x2="47.5857" y2="17.8194" stroke="white" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round"/>
+<mask id="mask0_761_1874" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="2" width="45" height="46">
+<path d="M36.0048 24.3882C43.9978 16.3952 46.6993 7.09222 43.7342 4.12715C40.7691 1.16207 32.4615 2.86825 23.4731 11.8566C14.4848 20.8449 14.1366 26.3649 14.1456 30.2347C11.0892 33.2912 2.81017 39.4816 1.26586 41.0259C0.300674 41.9911 -0.822746 44.5069 1.26586 46.5955C3.35447 48.6841 5.87029 47.5607 6.83548 46.5955C8.37978 45.0512 14.7906 36.6708 17.6861 33.7753C22.0385 33.3017 26.8355 33.5575 36.0048 24.3882Z" fill="#FEFEFE"/>
+</mask>
+<g mask="url(#mask0_761_1874)">
+<ellipse rx="48.2407" ry="48.2885" transform="matrix(-0.692989 -0.720948 0.726254 -0.687427 9.49999 36.4632)" fill="#546DDB"/>
+<ellipse rx="48.2407" ry="48.2885" transform="matrix(-0.692989 -0.720948 0.726254 -0.687427 9.49999 36.4632)" fill="white" fill-opacity="0.2"/>
+<circle r="36.2925" transform="matrix(-0.692989 -0.720948 0.726254 -0.687427 11.3961 37.2943)" fill="#1D8CE0"/>
+<circle r="36.2925" transform="matrix(-0.692989 -0.720948 0.726254 -0.687427 11.3961 37.2943)" fill="white" fill-opacity="0.2"/>
+<circle r="26.9584" transform="matrix(-0.692989 -0.720948 0.726254 -0.687427 11.0856 36.7537)" fill="#2FC4A7"/>
+<circle r="26.9584" transform="matrix(-0.692989 -0.720948 0.726254 -0.687427 11.0856 36.7537)" fill="white" fill-opacity="0.2"/>
+<circle r="17.4437" transform="matrix(-0.692989 -0.720948 0.726254 -0.687427 11.7691 36.468)" fill="#FAA21E"/>
+<circle r="17.4437" transform="matrix(-0.692989 -0.720948 0.726254 -0.687427 11.7691 36.468)" fill="white" fill-opacity="0.4"/>
+<circle r="10.4324" transform="matrix(-0.692989 -0.720948 0.726254 -0.687427 8.53587 38.8278)" fill="#D0333D"/>
+<circle r="10.4324" transform="matrix(-0.692989 -0.720948 0.726254 -0.687427 8.53587 38.8278)" fill="white" fill-opacity="0.4"/>
+</g>
+</svg>

@@ -21,11 +21,13 @@ const app = new Vue({
                 })
         },
 
-        selectItem: function(id) {
-            api.getOrderHistory(id)
+        selectItem: function(item) {
+            console.log("selected " + item.itemHrid)
+            api.getOrderHistory(item.itemHrid)
                 .then(response => response.json())
                 .then(json => {
                     this.currentItem = JSON.parse(JSON.stringify(json));
+                    console.log(this.currentItem)
                 })
         },
 
@@ -36,6 +38,10 @@ const app = new Vue({
             if(validateOrderBooks(orderBooks)){
                 api.appendToOrderHistory(orderBooks)
             }
+        },
+
+        isSelected: function(item) {
+            return this.currentItem.itemHrid === item.itemHrid;
         }
     },
 

@@ -17,9 +17,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 
 app.use(express.static(__dirname + '/web'));
+app.use(express.static(__dirname + "/assets"));
 app.use(require('./routes'));
 
+let db = require("./mongo/db");
 const server = http.createServer(app);
+
 
 
 //run server

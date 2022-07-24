@@ -26,7 +26,9 @@
                     ALL ITEMS
                 <ul id="items">
                     <li class="item" v-bind:class="{selected: isSelected(item)}"
-                    v-for="item in items" v-on:click="openItem(item)">
+                    v-for="item in items" v-on:click="selectItem(item)">
+                        
+                    <img :src="item.itemThumbnail">
                         <b>{{item.itemHrid}}</b>
                         <br>
                          
@@ -35,6 +37,8 @@
             </div>
             <div id="current-item-container">
                 CURRENT ITEM
+                <br>
+                <img :src="currentItem.itemThumbnail">
                 <b>{{currentItem.itemHrid}}</b>
             </div>
 		</div>

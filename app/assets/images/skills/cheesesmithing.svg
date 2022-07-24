@@ -1,0 +1,26 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M18.1772 18.0001L7.98522 36.6338" stroke="#FAA21E" stroke-width="4" stroke-linecap="round"/>
+<path d="M18.1772 18.0001L7.98522 36.6338" stroke="white" stroke-opacity="0.2" stroke-width="4" stroke-linecap="round"/>
+<path d="M30.2964 24.2352L34.3811 16.8437C35.4528 14.9044 34.7439 12.4635 32.8001 11.3999L15.6302 2.0052C13.7085 0.953727 11.2985 1.64356 10.2242 3.5526L5.95751 11.1346C4.85501 13.0938 5.58309 15.5765 7.56908 16.6299L24.921 25.8341C26.849 26.8568 29.2408 26.1453 30.2964 24.2352Z" fill="#FAA21E"/>
+<path d="M30.2964 24.2352L34.3811 16.8437C35.4528 14.9044 34.7439 12.4635 32.8001 11.3999L15.6302 2.0052C13.7085 0.953727 11.2985 1.64356 10.2242 3.5526L5.95751 11.1346C4.85501 13.0938 5.58309 15.5765 7.56908 16.6299L24.921 25.8341C26.849 26.8568 29.2408 26.1453 30.2964 24.2352Z" fill="white" fill-opacity="0.2"/>
+<mask id="mask0_662_466" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="3" y="0" width="34" height="28">
+<path d="M28.3946 27.6766L36.3239 13.328L12.1626 0.107916L3.94644 14.7083L28.3946 27.6766Z" fill="#FAA21E"/>
+<path d="M28.3946 27.6766L36.3239 13.328L12.1626 0.107916L3.94644 14.7083L28.3946 27.6766Z" fill="white" fill-opacity="0.2"/>
+</mask>
+<g mask="url(#mask0_662_466)">
+<circle cx="8.46382" cy="7.91382" r="2.4092" transform="rotate(65.1786 8.46382 7.91382)" fill="#FAA21E"/>
+<circle cx="8.46382" cy="7.91382" r="2.4092" transform="rotate(65.1786 8.46382 7.91382)" fill="white" fill-opacity="0.8"/>
+<circle cx="28.1978" cy="9.19776" r="2.4092" transform="rotate(65.1786 28.1978 9.19776)" fill="#FAA21E"/>
+<circle cx="28.1978" cy="9.19776" r="2.4092" transform="rotate(65.1786 28.1978 9.19776)" fill="white" fill-opacity="0.8"/>
+<circle cx="17.9406" cy="7.94008" r="2.96842" transform="rotate(65.1786 17.9406 7.94008)" fill="#FAA21E"/>
+<circle cx="17.9406" cy="7.94008" r="2.96842" transform="rotate(65.1786 17.9406 7.94008)" fill="white" fill-opacity="0.8"/>
+<circle cx="22.1325" cy="16.1318" r="1.60613" transform="rotate(65.1786 22.1325 16.1318)" fill="#FAA21E"/>
+<circle cx="22.1325" cy="16.1318" r="1.60613" transform="rotate(65.1786 22.1325 16.1318)" fill="white" fill-opacity="0.8"/>
+<circle cx="11.8312" cy="14.8303" r="1.37906" transform="rotate(65.1786 11.8312 14.8303)" fill="#FAA21E"/>
+<circle cx="11.8312" cy="14.8303" r="1.37906" transform="rotate(65.1786 11.8312 14.8303)" fill="white" fill-opacity="0.8"/>
+<circle cx="25.4691" cy="22.4686" r="2.01582" transform="rotate(75 25.4691 22.4686)" fill="#FAA21E"/>
+<circle cx="25.4691" cy="22.4686" r="2.01582" transform="rotate(75 25.4691 22.4686)" fill="white" fill-opacity="0.8"/>
+<circle cx="30.0653" cy="17.0658" r="0.803067" transform="rotate(65.1786 30.0653 17.0658)" fill="#FAA21E"/>
+<circle cx="30.0653" cy="17.0658" r="0.803067" transform="rotate(65.1786 30.0653 17.0658)" fill="white" fill-opacity="0.8"/>
+</g>
+</svg>

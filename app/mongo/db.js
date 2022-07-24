@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const url = process.env.MONGO_DB
+const url = process.env.MONGO_DB || require("../config").MONGO_DB
 const dbName = 'cow-price-tracker';
 
 mongoose.connect(url, {useNewUrlParser: true});
