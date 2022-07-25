@@ -26,8 +26,10 @@ function appendToOrderHistory(req, res) {
     let order = req.body;
     let itemHrid = cleanItemHrid(order.itemHrid);
     let time = Date.now()
+    let orderBooks = order.orderBooks;
+    orderBooks.time = time;
     return OrderHistory.updateOne({itemHrid: itemHrid},
-         {$push: {orderBooks: order.orderBooks},
+         {$push: {orderBooks: orderBooks},
          $set: {lastUpdated: time, itemThumbnail: getThumbnail(itemHrid)}},
          { upsert: true}
          )

@@ -8,7 +8,7 @@
 	<title></title>
 
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/pell/dist/pell.min.css">
-	<link rel="stylesheet" type="text/css" href="/web/main.css">
+	<link rel="stylesheet" type="text/css" href="main.css">
 
 	
 </head>
@@ -17,16 +17,25 @@
 		<div id="header">
 			{{message}}
 		</div>
+        <br>
 		<div id="app-body">
-            <div id="post-order">
-                <input id="order-input-box" v-model="post.orderBooks"></input>
-                <button class="button" v-on:click="postOrderBooks()">Post</button>
+            <div id="current-item-container" v-show="currentItem.itemHrid">
+                CURRENT ITEM
+                <br>
+                <img :src="currentItem.itemThumbnail">
+                <b>{{currentItem.itemHrid}}</b>
+                <div id="price-graph" style="width:600px;height:250px;"></div>
             </div>
             <div id="items-container">
-                    ALL ITEMS
+                    ITEMS
+                    
+                <div id="items-search">
+                    <input id="order-input-box" v-model="itemSearch" @keyup="filterItems()"></input>
+                    <button class="button" v-on:click="clearItems()">Clear</button>
+                </div>
                 <ul id="items">
                     <li class="item" v-bind:class="{selected: isSelected(item)}"
-                    v-for="item in items" v-on:click="selectItem(item)">
+                    v-for="item in filteredItems" v-on:click="selectItem(item)">
                         
                     <img :src="item.itemThumbnail">
                         <b>{{item.itemHrid}}</b>
@@ -34,13 +43,6 @@
                          
                     </li>
                 </ul>
-            </div>
-            <div id="current-item-container" v-show="currentItem.itemHrid">
-                CURRENT ITEM
-                <br>
-                <img :src="currentItem.itemThumbnail">
-                <b>{{currentItem.itemHrid}}</b>
-                <div id="current-item-price-graph" style="width:600px;height:250px;"></div>
             </div>
 		</div>
 	</div>
@@ -50,6 +52,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src ="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/1.33.1/plotly.min.js"></script>
 	<script src="api.js" type="module"></script>
+    <script src="marketview.js" type="module"></script>
 	<script src="main.js" type="module"></script>
 </body>
 </html>

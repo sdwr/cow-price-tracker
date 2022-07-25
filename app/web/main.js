@@ -1,4 +1,5 @@
 import {api} from './api.js';
+import {marketview} from './marketview.js';
 
 const app = new Vue({
     el: '#app',
@@ -6,7 +7,10 @@ const app = new Vue({
         message: "Milky Way Price Tracker",
         items: [],
         currentItem: {itemHrid: ""},
-        post: {orderBooks: ""}
+        itemSearch: "",
+        filteredItems: []
+
+    
     },
     created: function() {
         this.loadItems();
@@ -17,7 +21,7 @@ const app = new Vue({
                 .then(response => response.json())
                 .then(json => {
                     this.items = JSON.parse(JSON.stringify(json));
-
+                    this.filterItems()
                 })
         },
 
@@ -27,12 +31,32 @@ const app = new Vue({
                 .then(response => response.json())
                 .then(json => {
                     this.currentItem = JSON.parse(JSON.stringify(json));
+                    marketview.drawItem(this.currentItem);
                     console.log(this.currentItem)
                 })
         },
 
+        clearItems: function() {
+            this.itemSearch = "";
+            marketview.clear();
+            this.filterItems();
+        },
+
+        filterItems: function() {
+            if(this.itemSearch != "") {
+                this.filteredItems = this.items.filter(x => {
+                    let i = x.itemHrid.split("-");
+                    let itemName = i[1]
+                    itemName = itemName.replaceAll("_", " ");
+        
+                    return itemName.includes(this.itemSearch)
+                });
+            } else {
+                this.filteredItems = this.items;
+            }
+        },
+
         postOrderBooks: function() {
-            console.log(this.post);
             let orderBooks = parseOrderBooks(this.post.orderBooks);
         
             if(validateOrderBooks(orderBooks)){
