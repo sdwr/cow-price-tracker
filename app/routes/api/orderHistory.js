@@ -44,7 +44,7 @@ function appendToOrderHistory(req, res) {
 
 function cleanItemHrid(itemHrid) {
     itemHrid = itemHrid.substring(1);
-    itemHrid = itemHrid.replace(/-/g, '-');
+    itemHrid = itemHrid.replace(/\//g, '-');
     return itemHrid;
 }
 
