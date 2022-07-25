@@ -24,6 +24,7 @@ function getOrderHistory(req, res) {
 
 function appendToOrderHistory(req, res) {
     let order = req.body;
+    console.log(order)
     let itemHrid = cleanItemHrid(order.itemHrid);
     let time = Date.now()
     return OrderHistory.updateOne({itemHrid: itemHrid},
