@@ -24,7 +24,7 @@ function getOrderHistory(req, res) {
 
 function appendToOrderHistory(req, res) {
     let order = req.body;
-    let itemHrid = order.itemHrid;
+    let itemHrid = cleanItemHrid(order.itemHrid);
     let time = Date.now()
     return OrderHistory.updateOne({itemHrid: itemHrid},
          {$push: {orderBooks: order.orderBooks},
@@ -41,6 +41,12 @@ function appendToOrderHistory(req, res) {
 //
 // unwrapped on client, and hrid changed to format "items-name_of_item"
 
+
+function cleanItemHrid(itemHrid) {
+    itemHrid = itemHrid.substring(1);
+    itemHrid = itemHrid.replaceAll('/', '-');
+    return itemHrid;
+}
 
 //get thumbnails from itemhrid
 //hrid is format <folder>-name_of_item
@@ -62,6 +68,6 @@ function getThumbnail(itemHrid) {
 //endpoints
 router.get('/items', getAllItems);
 router.get('/orderHistory/:id', getOrderHistory);
-router.post('/orderHistory/:id', appendToOrderHistory);
+router.post('/orderHistory', appendToOrderHistory);
 
 module.exports = router;

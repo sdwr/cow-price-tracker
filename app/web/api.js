@@ -20,7 +20,7 @@ function appendToOrderHistory(orderBooks) {
     options.mode = 'cors';
     options.headers = {'Content-Type': 'application/json'}
     options.body = JSON.stringify(orderBooks)
-    return fetch(`api/orderHistory/${orderBooks.itemHrid}`, options)
+    return fetch(`api/orderHistory`, options)
 }
 
 export const api = {getAllItems, getOrderHistory, appendToOrderHistory}

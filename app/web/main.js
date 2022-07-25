@@ -56,10 +56,6 @@ function parseOrderBooks(orderBooks) {
     if(orderBooks.marketItemOrderBooks) {
         orderBooks = orderBooks.marketItemOrderBooks;
     }
-    if(orderBooks.itemHrid) {
-        orderBooks.itemHrid = orderBooks.itemHrid.substring(1);
-        orderBooks.itemHrid = orderBooks.itemHrid.replaceAll('/', '-')
-    }
     return orderBooks;
 }
 
