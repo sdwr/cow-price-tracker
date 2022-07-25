@@ -33,8 +33,7 @@ const onRecieve = function(event) {
 }
 
 const onSend = function(data) {
-    console.log("sending:");
-    console.log(data);
+    //empty
 }
 
 
