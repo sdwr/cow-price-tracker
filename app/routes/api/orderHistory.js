@@ -24,7 +24,6 @@ function getOrderHistory(req, res) {
 
 function appendToOrderHistory(req, res) {
     let order = req.body;
-    console.log(order)
     let itemHrid = cleanItemHrid(order.itemHrid);
     let time = Date.now()
     return OrderHistory.updateOne({itemHrid: itemHrid},
@@ -45,7 +44,7 @@ function appendToOrderHistory(req, res) {
 
 function cleanItemHrid(itemHrid) {
     itemHrid = itemHrid.substring(1);
-    itemHrid = itemHrid.replaceAll('/', '-');
+    itemHrid = itemHrid.replace(/-/g, '-');
     return itemHrid;
 }
 
