@@ -23,10 +23,11 @@ function getOrderHistory(req, res) {
 }
 
 function appendToOrderHistory(req, res) {
-    let order = req.body;
-    let itemHrid = cleanItemHrid(order.itemHrid);
+    let itemHrid = cleanItemHrid(req.body.itemHrid);
     let time = Date.now()
-    let orderBooks = order.orderBooks;
+    let orderBooks = {}
+    orderBooks.asks = req.body.orderBooks[0].asks;
+    orderBooks.bids = req.body.orderBooks[0].bids;
     orderBooks.time = time;
     return OrderHistory.updateOne({itemHrid: itemHrid},
          {$push: {orderBooks: orderBooks},
