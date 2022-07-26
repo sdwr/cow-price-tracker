@@ -25,6 +25,11 @@ function getOrderHistory(req, res) {
 
 function appendToOrderHistory(req, res) {
     console.log(req.body);
+    if(req.body && req.body.type === "market_item_order_books_updated") {
+        req.body = req.body.marketItemOrderBooks
+    }
+
+
     let itemHrid = cleanItemHrid(req.body.itemHrid);
     let time = Date.now()
     let orderBooks = {}
