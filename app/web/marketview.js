@@ -1,7 +1,10 @@
 
 function drawItem(self, item) {
-    let plotData = plotOrderBooks(item);
-    let layout = {
+    let data = plotOrderBooks(item);
+    let plotData = data.plot;
+    let depthData = data.depth;
+
+    let plotLayout = {
         title: {
             text: "Price History"
         },
@@ -19,9 +22,30 @@ function drawItem(self, item) {
         margin: { 
             t: 0 
         } 
+    };
+
+    let depthLayout = {
+        barmode: "group",
+        xaxis: {
+            title: {
+                text: "Time"
+            }
+        },
+        yaxis: {
+            title: {
+                text: "Depth"
+            }
+        },
+        
+        margin: { 
+            t: 0 
+        } 
+
     }
-    console.log(Plotly.validate(plotData, layout))
-    Plotly.newPlot(self.priceGraph, plotData, layout);
+    console.log(Plotly.validate(plotData, plotLayout));
+    console.log(Plotly.validate(depthData, depthLayout));
+    Plotly.newPlot(self.priceGraph, plotData, plotLayout);
+    Plotly.newPlot(self.depthGraph, depthData, depthLayout)
 }
 
 function clear(self) {
@@ -40,6 +64,19 @@ function plotOrderBooks(item) {
         y: [],
         name: 'Bids'
     };
+    let depthAsks = {
+        x: [],
+        y: [],
+        name: 'Asks',
+        type: 'bar'
+    };
+    let depthBids = {
+        x: [],
+        y: [],
+        name: 'Bids',
+        type: 'bar'
+    };
+
     let currentTime = Date.now();
     let lowestAsk = -1;
     let totalAsks = 0;
@@ -58,6 +95,9 @@ function plotOrderBooks(item) {
             
             plotAsks.x.push(time)
             plotAsks.y.push(lowestAsk)
+
+            depthAsks.x.push(time)
+            depthAsks.y.push(totalAsks)
         }
         if(book.bids.length > 0) {
             highestBid = book.bids[0].price;
@@ -65,9 +105,12 @@ function plotOrderBooks(item) {
             
             plotBids.x.push(time)
             plotBids.y.push(highestBid)
+
+            depthBids.x.push(time)
+            depthBids.y.push(totalBids)
         }
     }
-    return [plotAsks, plotBids]
+    return {plot: [plotAsks, plotBids], depth: [depthAsks, depthBids]}
 }
 
 export const marketview = {drawItem}

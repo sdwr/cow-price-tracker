@@ -11,7 +11,8 @@ const app = new Vue({
         currentItem: {itemHrid: ""},
         itemSearch: "",
         filteredItems: [],
-        priceGraph: null
+        priceGraph: null,
+        depthGraph: null
 
     
     },
@@ -20,6 +21,7 @@ const app = new Vue({
     },
     mounted: function() {
         this.priceGraph = document.getElementById("price-graph");
+        this.depthGraph = document.getElementById("depth-graph");
     },
     methods: {
         loadItems: function() {

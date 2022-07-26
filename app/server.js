@@ -8,7 +8,6 @@ const bodyParser = require('body-parser');
 const moment = require('moment');
 
 require('./models/orderHistory');
-require('./models/errorLog');
 
 const app = express();
 app.use(cors());
