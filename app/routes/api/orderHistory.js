@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const CONSTANTS = require('../../constants');
 const OrderHistory = mongoose.model('OrderHistory');
+const ErrorLogSchema = mongoose.model('ErrorLog');
 
 require('../../constants');
 
@@ -23,6 +24,7 @@ function getOrderHistory(req, res) {
 }
 
 function appendToOrderHistory(req, res) {
+    console.log(req.body);
     let itemHrid = cleanItemHrid(req.body.itemHrid);
     let time = Date.now()
     let orderBooks = {}
