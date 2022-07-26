@@ -1,6 +1,8 @@
 import {api} from './api.js';
 import {marketview} from './marketview.js';
 
+
+
 const app = new Vue({
     el: '#app',
     data: {
@@ -8,12 +10,16 @@ const app = new Vue({
         items: [],
         currentItem: {itemHrid: ""},
         itemSearch: "",
-        filteredItems: []
+        filteredItems: [],
+        priceGraph: null
 
     
     },
     created: function() {
         this.loadItems();
+    },
+    mounted: function() {
+        this.priceGraph = document.getElementById("price-graph");
     },
     methods: {
         loadItems: function() {
@@ -31,14 +37,12 @@ const app = new Vue({
                 .then(response => response.json())
                 .then(json => {
                     this.currentItem = JSON.parse(JSON.stringify(json));
-                    marketview.drawItem(this.currentItem);
-                    console.log(this.currentItem)
+                    marketview.drawItem(this, this.currentItem);
                 })
         },
 
         clearItems: function() {
             this.itemSearch = "";
-            marketview.clear();
             this.filterItems();
         },
 
@@ -89,3 +93,4 @@ function validateOrderBooks(orderBooks) {
     }
     return false;
 }
+

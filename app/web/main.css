@@ -3,3 +3,27 @@
     -webkit-columns: 5;
     -moz-columns: 5;
 }
+
+#current-item-container {
+    margin: 5px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#items-container {
+    margin: 5px;
+    display:flex;
+    flex-direction:column;
+    align-items: center;
+    justify-content: center;
+}
+
+#price-graph {
+    min-height: 500px;
+}
+
+.selected {
+    border-style:solid;
+    box-sizing:border-box;
+}
