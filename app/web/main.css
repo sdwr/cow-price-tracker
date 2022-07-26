@@ -20,11 +20,11 @@
 }
 
 #price-graph {
-    min-height: 500px;
+    min-height: 400px;
 }
 
 #depth-graph {
-    height: 200px;
+    height: 150px;
     margin-top: -10px;
 }
 
