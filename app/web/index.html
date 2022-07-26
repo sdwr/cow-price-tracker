@@ -14,10 +14,6 @@
 </head>
 <body>
 	<div id="app">
-		<div id="header">
-			{{message}}
-		</div>
-        <br>
 		<div id="app-body">
             <div id="current-item-container" v-show="currentItem.itemHrid">
                 <div id="current-item">
@@ -37,7 +33,7 @@
                     <button class="button" v-on:click="clearItems()">Clear</button>
                 </div>
                 <div>
-                    <ul id="items">
+                    <ul id="items-list">
                         <li class="item" v-bind:class="{selected: isSelected(item)}"
                         v-for="item in filteredItems" v-on:click="selectItem(item)">
                             

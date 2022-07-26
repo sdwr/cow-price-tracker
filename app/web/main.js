@@ -30,6 +30,9 @@ const app = new Vue({
                 .then(json => {
                     this.items = JSON.parse(JSON.stringify(json));
                     this.filterItems()
+                    if(this.filteredItems && this.filteredItems.length > 0) {
+                        this.selectItem(this.filteredItems[0])
+                    }
                 })
         },
 
@@ -60,6 +63,7 @@ const app = new Vue({
             } else {
                 this.filteredItems = this.items;
             }
+            this.filteredItems = this.filteredItems.slice(0, 20);
         },
 
         postOrderBooks: function() {

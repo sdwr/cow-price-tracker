@@ -9,9 +9,7 @@ function drawItem(self, item) {
             text: "Price History"
         },
         xaxis: {
-            title: {
-                text: "Time"
-            }
+            'visible': false
         },
         yaxis: {
             title: {
@@ -84,11 +82,10 @@ function plotOrderBooks(item) {
     let totalBids = 0;
 
     let orderBooks = item.orderBooks;
-    let firstTime = orderBooks[0].time;
 
     for(let i = 0; i < orderBooks.length; i++) {
         let book = orderBooks[i]
-        let time = book.time - firstTime;
+        let time = new Date(orderBooks[i].time)
         if(book.asks.length > 0) {
             lowestAsk = book.asks[0].price;
             totalAsks = book.asks.reduce((prev, curr) => prev + curr.quantity, 0)
@@ -110,6 +107,7 @@ function plotOrderBooks(item) {
             depthBids.y.push(totalBids)
         }
     }
+
     return {plot: [plotAsks, plotBids], depth: [depthAsks, depthBids]}
 }
 
