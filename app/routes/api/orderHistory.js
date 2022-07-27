@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 
 const CONSTANTS = require('../../constants');
+const PlayerInventory = mongoose.model('PlayerInventory');
 const OrderHistory = mongoose.model('OrderHistory');
 //const vendorPrices = require('../../vendorPrices');
 
@@ -58,8 +59,8 @@ function getOrderHistory(req, res) {
 }
 
 function appendToOrderHistory(req, res) {
-    console.log("Appending to item: ");
-    console.log(req.body);
+    console.log("Appending to item: " + req.body.itemHrid);
+    
     if(req.body && req.body.type === "market_item_order_books_updated") {
         req.body = req.body.marketItemOrderBooks
     }
@@ -101,6 +102,36 @@ function appendToOrderHistory(req, res) {
 
 }
 
+//data format {userID: String, name: String, invValue: Number}
+function postInventory(req, res) {
+    let data = req.body;
+    let userID = data.userID;
+    let name = data.name;
+    let value = data.invValue;
+    let time = Date.now();
+
+    return PlayerInventory.updateOne({userID: userID},
+        {
+            $push: {valueHistory: {value: value, time: time}},
+            $set:
+            {
+                userID: userID,
+                name: name,
+                value: value,
+                lastUpdated: time
+            }
+        },
+        { upsert: true}
+
+    ) 
+    .then(result => res.send(result))
+    .catch(err => res.status(500).send(err));
+}
+
+function postMarketSale(req, res) {
+    //placeholder
+}
+
 //format for order update is
 //{"type":"market_item_order_books_updated","marketItemOrderBooks":{"itemHrid":"/items/donut","orderBooks":[{"asks":[{"listingId":192902,"quantity":252,"price":36},{"listingId":192828,"quantity":2344,"price":37},{"listingId":191681,"quantity":109,"price":44},{"listingId":191261,"quantity":9060,"price":47},{"listingId":179376,"quantity":30,"price":190},{"listingId":177749,"quantity":9,"price":245},{"listingId":175887,"quantity":235,"price":250},{"listingId":149309,"quantity":950,"price":500},{"listingId":26516,"quantity":8,"price":5000},{"listingId":33417,"quantity":1,"price":1000000000000}],"bids":[{"listingId":185915,"quantity":3630,"price":8},{"listingId":179404,"quantity":500,"price":7},{"listingId":83884,"quantity":2996,"price":6}]}]}}
 //
@@ -140,9 +171,12 @@ function getThumbnail(itemHrid) {
 
 //endpoints
 //router.get('/setVendorPrices', setVendorPrices);
-router.get('/latestPrice', getLatest);
 router.get('/items', getAllItems);
 router.get('/orderHistory/:id', getOrderHistory);
 router.post('/orderHistory', appendToOrderHistory);
+
+router.get('/latestPrice', getLatest);
+router.post('/inventory', postInventory);
+router.post('/marketSale', postMarketSale);
 
 module.exports = router;

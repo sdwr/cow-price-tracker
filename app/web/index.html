@@ -17,7 +17,7 @@
 		<div id="app-body">
             <div id="current-item-container" v-show="currentItem.itemHrid">
                 <div id="current-item">
-                    <img :src="currentItem.itemThumbnail">
+                    <img :src="getThumbnail(item)">
                     <b>{{currentItem.itemHrid}}</b>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                         <li class="item" v-bind:class="{selected: isSelected(item)}"
                         v-for="item in filteredItems" v-on:click="selectItem(item)">
                             
-                        <img :src="item.itemThumbnail">
+                        <img :src="getThumbnail(item)">
                             <b>{{item.itemHrid}}</b>
                             <br>
                             

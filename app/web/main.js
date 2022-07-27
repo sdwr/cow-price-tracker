@@ -66,6 +66,15 @@ const app = new Vue({
             this.filteredItems = this.filteredItems.slice(0, 20);
         },
 
+        getThumbnail: function(item) {
+            if(item && item.itemHrid) {
+                let gameUrl = "https://milkywayidle.com";
+                let imagePath = "/assets/images/";
+                let itemPath = item.itemHrid.replace("-", "/")
+                return gameUrl + imagePath + itemPath + ".svg";
+            }
+        },
+
         postOrderBooks: function() {
             let orderBooks = parseOrderBooks(this.post.orderBooks);
         
