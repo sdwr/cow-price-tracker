@@ -43,10 +43,7 @@ function getLatest(req, res) {
 }
 
 function getAllItems(req, res) {
-    return OrderHistory.find({}, {})
-        .then(result => result.map(o => {
-            return {itemHrid: o.itemHrid, itemThumbnail: o.itemThumbnail, lastUpdated: o.lastUpdated}
-        }))
+    return OrderHistory.find({}, {itemHrid: 1, itemThumbnail: 1, lastUpdated: 1})
         .then(result => res.send(result))
         .catch(err => res.status(500).send(err));
 }
@@ -59,11 +56,12 @@ function getOrderHistory(req, res) {
 }
 
 function appendToOrderHistory(req, res) {
-    console.log("Appending to item: " + req.body.itemHrid);
-    
+
     if(req.body && req.body.type === "market_item_order_books_updated") {
         req.body = req.body.marketItemOrderBooks
     }
+    
+    console.log("Adding item: " + req.body.itemHrid);
 
 
     let itemHrid = cleanItemHrid(req.body.itemHrid);

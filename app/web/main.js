@@ -9,6 +9,7 @@ const app = new Vue({
         message: "Milky Way Price Tracker",
         items: [],
         currentItem: {itemHrid: ""},
+        selectedItem: null,
         itemSearch: "",
         filteredItems: [],
         priceGraph: null,
@@ -38,6 +39,11 @@ const app = new Vue({
 
         selectItem: function(item) {
             console.log("selected " + item.itemHrid)
+            this.selectedItem = item.itemHrid;
+            //clearing this makes the selection visual change happen after api call??
+            //this.currentItem = null;
+            marketview.clearPriceHistory(this)
+
             api.getOrderHistory(item.itemHrid)
                 .then(response => response.json())
                 .then(json => {
@@ -46,7 +52,7 @@ const app = new Vue({
                 })
         },
 
-        clearItems: function() {
+        clearItemSearch: function() {
             this.itemSearch = "";
             this.filterItems();
         },
@@ -84,7 +90,7 @@ const app = new Vue({
         },
 
         isSelected: function(item) {
-            return this.currentItem.itemHrid === item.itemHrid;
+            return this.selectedItem === item.itemHrid;
         }
     },
 

@@ -40,14 +40,25 @@ function drawItem(self, item) {
         } 
 
     }
-    console.log(Plotly.validate(plotData, plotLayout));
-    console.log(Plotly.validate(depthData, depthLayout));
+
+    let priceGraphErrors = Plotly.validate(plotData, plotLayout);
+    let depthGraphErrors = Plotly.validate(depthData, depthLayout);
+    if(priceGraphErrors) {
+        console.log("Errors found in price graph: ")
+        console.log(Plotly.validate(plotData, plotLayout));
+    }
+    if(depthGraphErrors){
+        console.log("Errors found in depth graph: ")
+        console.log(Plotly.validate(depthData, depthLayout));
+    }
+    
     Plotly.newPlot(self.priceGraph, plotData, plotLayout);
     Plotly.newPlot(self.depthGraph, depthData, depthLayout)
 }
 
-function clear(self) {
+function clearPriceHistory(self) {
     Plotly.purge(self.priceGraph)
+    Plotly.purge(self.depthGraph);
 }
 
 //helpers
@@ -111,4 +122,4 @@ function plotOrderBooks(item) {
     return {plot: [plotAsks, plotBids], depth: [depthAsks, depthBids]}
 }
 
-export const marketview = {drawItem}
+export const marketview = {drawItem, clearPriceHistory}
