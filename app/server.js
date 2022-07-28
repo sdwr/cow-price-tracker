@@ -13,6 +13,11 @@ require('./models/playerInventory');
 const app = express();
 app.use(cors());
 
+app.use((req, res, next) => {
+	console.log("logging req body: ")
+	console.log(req.body)
+	next()
+})
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
