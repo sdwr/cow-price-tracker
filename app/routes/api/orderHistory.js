@@ -1,12 +1,14 @@
 const router = require('express').Router();
 const mongoose = require('mongoose');
-const moment = require('moment');
+const crypto = require('crypto');
 
 const CONSTANTS = require('../../constants');
 const PlayerInventory = mongoose.model('PlayerInventory');
 const OrderHistory = mongoose.model('OrderHistory');
 const Sale = mongoose.model('Sale');
 //const vendorPrices = require('../../vendorPrices');
+
+let LINK_EXPIRATION = 1000 * 3600;
 
 
 // function setVendorPrices(req, res) {
@@ -36,6 +38,42 @@ const Sale = mongoose.model('Sale');
 //         .then(result => res.send(result))
 //         .catch(err => res.status(500),send(err));
 // }
+
+function getProfileLink(req, res) {
+    let userID = req.params.id;
+    let time = Date.now();
+    let link = crypto.randomBytes(5).toString('hex');
+    let profileLink = {link: link, expiryTime: time + LINK_EXPIRATION}
+
+    return PlayerInventory.updateOne({userID: userID},
+        { 
+            $set: {profileLink: profileLink}
+        })
+        .then(result => res.send({result: result, link: link}))
+        .catch(err => res.status(500).send(err))
+}
+
+function getProfileByLink(req, res) {
+    let link = req.params.link;
+    let time = Date.now();
+
+    return PlayerInventory.findOne(
+        {
+            "profileLink.link": link,
+            "profileLink.expiryTime": {$gt: time}
+        })
+        .then(result => res.send(result))
+        .catch(err => res.status(500).send(err));
+
+}
+
+function getSaleHistory(req, res) {
+    let userID = req.params.id;
+    return Sale.find({userID: userID})
+        .then(result => res.send(result))
+        .catch(err => res.status(500).send(err));
+
+}
 
 function getLatest(req, res) {
     return OrderHistory.find({}, {itemHrid: 1, vendor: 1, latestAsk: 1, latestBid: 1, lastUpdated: 1})
@@ -210,6 +248,10 @@ function getThumbnail(itemHrid) {
 
 //endpoints
 //router.get('/setVendorPrices', setVendorPrices);
+router.get('/profileLink/:id', getProfileLink);
+router.get('/profileByLink/:link', getProfileByLink);
+router.get('/saleHistory/:id', getSaleHistory);
+
 router.get('/items', getAllItems);
 router.get('/orderHistory/:id', getOrderHistory);
 router.post('/orderHistory', appendToOrderHistory);

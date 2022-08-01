@@ -28,6 +28,15 @@
     height: 150px;
     margin-top: -50px;
 }
+#wealth-graph {
+    min-height: 400px;
+}
+
+#profile-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .selected {
     border-style:solid;

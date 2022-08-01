@@ -23,4 +23,22 @@ function appendToOrderHistory(orderBooks) {
     return fetch(`api/orderHistory`, options)
 }
 
-export const api = {getAllItems, getOrderHistory, appendToOrderHistory}
+function getPlayerInv(profileLink) {
+    const options = {}
+    options.method = 'GET';
+    options.mode = 'cors';
+    options.headers = {'Content-Type': 'application/json'}
+    return fetch(`api/profileByLink/${profileLink}`, options)
+}
+
+function getSaleHistory(userID) {
+    const options = {}
+    options.method = 'GET';
+    options.mode = 'cors';
+    options.headers = {'Content-Type': 'application/json'}
+    options.body = JSON.stringify(orderBooks)
+    return fetch(`api/saleHistory/${userID}`, options)
+}
+
+export const api = {getAllItems, getOrderHistory, appendToOrderHistory, 
+    getPlayerInv, getSaleHistory}

@@ -16,12 +16,18 @@ const postMarketSale = "/api/marketSale";
 const postInventory = "/api/inventory";
 const getLatestPrices = "/api/latestPrice";
 
+const getProfileLink = "/api/profileLink";
+const goToProfileLink = "/profile.html?profile=";
+
 let character = {}
 let inventory = {}
 let invValue = 0
 let market = {}
 let prices = {}
 let pricesTime = 0
+
+let profileLink = null;
+let profileEle = null;
 
 //change for dev/prod
 const useServer = herokuServer
@@ -65,6 +71,10 @@ const postMarketData = function(data) {
 // }
 const postSale = function(data) {
     data.userID = data.characterID;
+    if(DEBUG) {
+        console.log("made buy/sale!");
+        console.log(data)
+    }
     fetch(useServer + postMarketSale, {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
@@ -196,7 +206,7 @@ const calcInvValue = function() {
 const getInvValue = async function() {
     //get new prices if 15 min old
     if(Date.now() - pricesTime > 1000 * 60 * 15) {
-        return fetch(herokuServer + getLatestPrices, {
+        return fetch(useServer + getLatestPrices, {
             method: "GET",
             headers: {'Content-Type': 'application/json'}
         }).then(res => {
@@ -212,6 +222,38 @@ const getInvValue = async function() {
     }
 }
 
+const createProfileEle = function() {
+    let currency = Array.from(document.getElementsByTagName('div')).filter(e => e.innerText === 'Currencies')[0]
+    let currencyContainer = currency.parentNode.parentNode;
+    let inventoryEle = currencyContainer.parentNode;
+
+    profileEle = document.createElement('a');
+    let linkText = document.createTextNode("Link to Profile");
+    profileEle.setAttribute('target', '_blank')
+    profileEle.style.color = 'pink';
+    profileEle.appendChild(linkText)
+    profileEle.href = profileLink;
+
+    inventoryEle.insertBefore(profileEle, currencyContainer);
+}
+
+const createProfileLink = function() {
+    let id = character.userID
+    fetch(useServer + getProfileLink + `/${id}`, {
+        method: "GET",
+        headers: {'Content-Type': 'application/json'}
+    }).then(res => {
+        console.log("Got temp profile link!")
+        if(DEBUG) {
+            console.log(res.json())
+        }
+        return res.json()
+    }).then(res => {
+        let link = useServer + goToProfileLink + res.link;
+        profileLink = link;
+        createProfileEle()
+    })
+}
 
 //websocket spy
 const onRecieve = function(event) {
@@ -231,6 +273,7 @@ const onRecieve = function(event) {
         updateInvValue = true;
         postInventory = true;
         character = parsedData.character;
+        createProfileLink()
         let items = parsedData.characterItems;
         items = items.map(x => convertItemHrid(x));
         let mark = parsedData.myMarketListings;
@@ -244,8 +287,6 @@ const onRecieve = function(event) {
         item = convertItemHrid(item);
 
         //post data if completed sale
-        console.log("is sale?")
-        console.log(item)
         if(item.status === "/market_listing_status/filled" ||
             item.status === "/market_listing_status/active") {
             if(item.unclaimedCoinCount === 0 && 
@@ -253,7 +294,6 @@ const onRecieve = function(event) {
                item.filledQuantity != 0
             ) {
                 //at least some of the order has been filled
-                console.log("made sale!")
                 postSale(item)
             }
         }

@@ -1,5 +1,6 @@
 import {api} from './api.js';
 import {marketview} from './marketview.js';
+import {profilecharts} from './profilecharts.js';
 
 
 
@@ -13,16 +14,34 @@ const app = new Vue({
         itemSearch: "",
         filteredItems: [],
         priceGraph: null,
-        depthGraph: null
+        depthGraph: null,
+
+        //profile data
+        profileLink: null,
+        playerInv: null,
+        userID: null,
+        saleHistory: null,
+
+        wealthGraph: null
+
 
     
     },
     created: function() {
         this.loadItems();
+        
+        //profile functions
+        this.setProfileLink();
+        
     },
     mounted: function() {
         this.priceGraph = document.getElementById("price-graph");
         this.depthGraph = document.getElementById("depth-graph");
+        this.wealthGraph = document.getElementById("wealth-graph");
+        
+        if(this.profileLink) {
+            this.loadProfile()
+        }
     },
     methods: {
         loadItems: function() {
@@ -91,7 +110,42 @@ const app = new Vue({
 
         isSelected: function(item) {
             return this.selectedItem === item.itemHrid;
+        },
+
+        //profile functions
+        setProfileLink: function() {
+            let query = window.location.search;
+            let params = new URLSearchParams(query);
+            this.profileLink = params.get("profile")
+        },
+
+        loadProfile: async function() {
+            await this.loadPlayerInv()
+            await this.loadSaleHistory()
+        },
+
+        loadPlayerInv: function() {
+            return api.getPlayerInv(this.profileLink)
+                .then(response => response.json())
+                .then(json => {
+                    this.playerInv = JSON.parse(JSON.stringify(json));
+                    this.userID = this.playerInv.userID;
+
+                    profilecharts.drawWealthGraph(this, this.playerInv)
+                    return true;
+                })
+        },
+
+        loadSaleHistory: function() {
+            console.log(this.userID)
+            return api.getSaleHistory(this.userID)
+                .then(response => response.json())
+                .then(json => {
+                    this.saleHistory = JSON.parse(JSON.stringify(json));
+                    return true;
+                })
         }
+
     },
 
 

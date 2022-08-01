@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="main.css">
+
+	
+</head>
+<body>
+	<div id="app">
+		<div id="app-body">
+			<div id="profile-title" v-if="playerInv">
+				{{playerInv.name}}
+			</div>
+            <div id="graph-container">
+                <div id="wealth-graph"></div>
+            </div>
+			<div id="market-history">
+			</div>
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.12.1.min.js"></script>
+    <script src="api.js" type="module"></script>
+    <script src="profilecharts.js" type="module"></script>
+	<script src="main.js" type="module"></script>
+</body>
+</html>
