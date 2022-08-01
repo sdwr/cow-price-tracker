@@ -51,7 +51,7 @@ function drawItem(self, item) {
         console.log("Errors found in depth graph: ")
         console.log(Plotly.validate(depthData, depthLayout));
     }
-    
+
     Plotly.newPlot(self.priceGraph, plotData, plotLayout);
     Plotly.newPlot(self.depthGraph, depthData, depthLayout)
 }
@@ -100,9 +100,13 @@ function plotOrderBooks(item) {
         if(book.asks.length > 0) {
             lowestAsk = book.asks[0].price;
             totalAsks = book.asks.reduce((prev, curr) => prev + curr.quantity, 0)
+
+            //exclude values over 200M
+            if(lowestAsk < 200 * 1000 * 1000) {
             
-            plotAsks.x.push(time)
-            plotAsks.y.push(lowestAsk)
+                plotAsks.x.push(time)
+                plotAsks.y.push(lowestAsk)
+            }
 
             depthAsks.x.push(time)
             depthAsks.y.push(totalAsks)

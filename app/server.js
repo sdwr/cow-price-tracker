@@ -9,6 +9,7 @@ const moment = require('moment');
 
 require('./models/orderHistory');
 require('./models/playerInventory');
+require('./models/sale');
 
 const app = express();
 

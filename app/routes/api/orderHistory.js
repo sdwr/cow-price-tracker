@@ -5,6 +5,7 @@ const moment = require('moment');
 const CONSTANTS = require('../../constants');
 const PlayerInventory = mongoose.model('PlayerInventory');
 const OrderHistory = mongoose.model('OrderHistory');
+const Sale = mongoose.model('Sale');
 //const vendorPrices = require('../../vendorPrices');
 
 
@@ -126,8 +127,46 @@ function postInventory(req, res) {
     .catch(err => res.status(500).send(err));
 }
 
+function getMarketHistory(req, res) {
+    let userID = req.params.userID;
+
+    return Sale.find({userID: userID}, {})
+        .then(result => res.send(result))
+        .catch(err => res.status(500).send(err));
+}
+
+//data format {userID: String, name: String, sale: Sale}
 function postMarketSale(req, res) {
     //placeholder
+    let sale = req.body;
+    let userID = sale.userID;
+    let saleID = sale.id;
+    sale.itemHrid = cleanItemHrid(sale.itemHrid);
+    let time = Date.now();
+
+    sale.time = time;
+    sale.itemHrid = cleanItemHrid(sale.itemHrid);
+    
+    return Sale.updateOne({saleID: saleID},
+            {
+                $set: {
+                    saleID: saleID,
+                    userID: userID,
+                    enhancementLevel: sale.enhancementLevel,
+                    filledQuantity: sale.filledQuantity,
+                    orderQuantity: sale.orderQuantity,
+                    price: sale.price,
+                    taxTaken: sale.taxTaken,
+                    itemHrid: sale.itemHrid,
+                    isSell: sale.isSell,
+                    lastUpdated: time
+                },
+                $push: {filledHistory: {time: time, filledQuantity: sale.filledQuantity}}
+            },
+            {upsert: true}
+        )
+        .then(result => res.send(result))
+        .catch(err => res.status(500).send(err));
 }
 
 //format for order update is
@@ -137,7 +176,9 @@ function postMarketSale(req, res) {
 
 
 function cleanItemHrid(itemHrid) {
-    itemHrid = itemHrid.substring(1);
+    if(itemHrid.charAt(0) == '/') {
+        itemHrid = itemHrid.substring(1);
+    }
     itemHrid = itemHrid.replace(/\//g, '-');
     return itemHrid;
 }
@@ -174,6 +215,8 @@ router.get('/orderHistory/:id', getOrderHistory);
 router.post('/orderHistory', appendToOrderHistory);
 
 router.get('/latestPrice', getLatest);
+
+router.get('/marketHistory', getMarketHistory);
 router.post('/inventory', postInventory);
 router.post('/marketSale', postMarketSale);
 

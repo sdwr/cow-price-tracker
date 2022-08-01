@@ -12,6 +12,7 @@
 const herokuServer = "https://cow-price-tracker-server.herokuapp.com";
 const localServer = "http://localhost:8080";
 const postOrderHistory = "/api/orderHistory";
+const postMarketSale = "/api/marketSale";
 const postInventory = "/api/inventory";
 const getLatestPrices = "/api/latestPrice";
 
@@ -57,6 +58,24 @@ const postMarketData = function(data) {
     });
 }
 
+//post completed buy/sale from market
+//format: 
+// { sale: characterID, createdTimestamp, expirationTimestamp, filledQuantity,
+//    orderQuantity, price, itemHrid, isSell, ... }
+// }
+const postSale = function(data) {
+    data.userID = data.characterID;
+    fetch(useServer + postMarketSale, {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    }).then(res => {
+        if(DEBUG) {
+            console.log("Request complete! response:", res);
+        }
+    });
+}
+
 const rNum = function(num) {
     let abbrev = ['', 'K', 'M', 'B', 'Tr']
     let i = 0;
@@ -73,7 +92,9 @@ const rNum = function(num) {
 }
 
 const convertItemHrid = function(x) {
-    x.itemHrid = x.itemHrid.substring(1)
+    if(x.itemHrid.charAt(0) === "/") {
+        x.itemHrid = x.itemHrid.substring(1)
+    }
     x.itemHrid = x.itemHrid.replace("/","-")
     return x
 }
@@ -205,6 +226,7 @@ const onRecieve = function(event) {
     if(parsedData.type === "market_item_order_books_updated") {
         //postMarketData(parsedData.marketItemOrderBooks)
     }
+    //load char + inventory on startup 
     if(parsedData.type === "init_character_info") {
         updateInvValue = true;
         postInventory = true;
@@ -220,11 +242,28 @@ const onRecieve = function(event) {
 
         let item = parsedData.endMarketListings[0]
         item = convertItemHrid(item);
+
+        //post data if completed sale
+        console.log("is sale?")
+        console.log(item)
+        if(item.status === "/market_listing_status/filled" ||
+            item.status === "/market_listing_status/active") {
+            if(item.unclaimedCoinCount === 0 && 
+               item.unclaimedItemCount === 0 &&
+               item.filledQuantity != 0
+            ) {
+                //at least some of the order has been filled
+                console.log("made sale!")
+                postSale(item)
+            }
+        }
+
+        //update local est market value
         if(market) {
             let index = market.findIndex(e => e.id === item.id)
             if(index >= 0) {
                 if(market[index].createdTimestamp = market[index].expirationTimestamp) {
-                    //listing expired
+                    //listing expired or completed
                     market.splice(index, 1)
                 } else {
                     market[index] = item
