@@ -32,6 +32,10 @@
     min-height: 400px;
 }
 
+#sale-table {
+    align-self: center;
+}
+
 #profile-title {
     display: flex;
     align-items: center;

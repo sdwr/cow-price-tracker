@@ -36,7 +36,6 @@ function getSaleHistory(userID) {
     options.method = 'GET';
     options.mode = 'cors';
     options.headers = {'Content-Type': 'application/json'}
-    options.body = JSON.stringify(orderBooks)
     return fetch(`api/saleHistory/${userID}`, options)
 }
 

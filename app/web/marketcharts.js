@@ -77,12 +77,14 @@ function plotOrderBooks(item) {
         x: [],
         y: [],
         name: 'Asks',
+        yaxis: 'y2',
         type: 'bar'
     };
     let depthBids = {
         x: [],
         y: [],
         name: 'Bids',
+        yaxis: 'y2',
         type: 'bar'
     };
 
@@ -93,11 +95,11 @@ function plotOrderBooks(item) {
     let totalBids = 0;
 
     let orderBooks = item.orderBooks;
-
+    
     for(let i = 0; i < orderBooks.length; i++) {
         let book = orderBooks[i]
         let time = new Date(orderBooks[i].time)
-        if(book.asks.length > 0) {
+        if(book.asks && book.asks.length > 0) {
             lowestAsk = book.asks[0].price;
             totalAsks = book.asks.reduce((prev, curr) => prev + curr.quantity, 0)
 
@@ -111,7 +113,7 @@ function plotOrderBooks(item) {
             depthAsks.x.push(time)
             depthAsks.y.push(totalAsks)
         }
-        if(book.bids.length > 0) {
+        if(book.bids && book.bids.length > 0) {
             highestBid = book.bids[0].price;
             totalBids = book.bids.reduce((prev, curr) => prev + curr.quantity, 0)
             
@@ -126,4 +128,4 @@ function plotOrderBooks(item) {
     return {plot: [plotAsks, plotBids], depth: [depthAsks, depthBids]}
 }
 
-export const marketview = {drawItem, clearPriceHistory}
+export const marketcharts = {drawItem, clearPriceHistory}

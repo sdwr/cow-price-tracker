@@ -56,7 +56,7 @@ function getProfileLink(req, res) {
 function getProfileByLink(req, res) {
     let link = req.params.link;
     let time = Date.now();
-
+    
     return PlayerInventory.findOne(
         {
             "profileLink.link": link,
@@ -69,7 +69,7 @@ function getProfileByLink(req, res) {
 
 function getSaleHistory(req, res) {
     let userID = req.params.id;
-    return Sale.find({userID: userID})
+    return Sale.find({userID: userID}).sort({lastUpdated: 1})
         .then(result => res.send(result))
         .catch(err => res.status(500).send(err));
 

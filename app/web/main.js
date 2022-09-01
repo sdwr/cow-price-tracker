@@ -1,5 +1,5 @@
 import {api} from './api.js';
-import {marketview} from './marketview.js';
+import {marketcharts} from './marketcharts.js';
 import {profilecharts} from './profilecharts.js';
 
 
@@ -13,8 +13,6 @@ const app = new Vue({
         selectedItem: null,
         itemSearch: "",
         filteredItems: [],
-        priceGraph: null,
-        depthGraph: null,
 
         //profile data
         profileLink: null,
@@ -22,7 +20,11 @@ const app = new Vue({
         userID: null,
         saleHistory: null,
 
-        wealthGraph: null
+        //page elements
+        priceGraph: null,
+        depthGraph: null,
+        wealthGraph: null,
+        saleTable: null
 
 
     
@@ -38,6 +40,7 @@ const app = new Vue({
         this.priceGraph = document.getElementById("price-graph");
         this.depthGraph = document.getElementById("depth-graph");
         this.wealthGraph = document.getElementById("wealth-graph");
+        this.saleTable = document.getElementById("sale-table");
         
         if(this.profileLink) {
             this.loadProfile()
@@ -61,13 +64,13 @@ const app = new Vue({
             this.selectedItem = item.itemHrid;
             //clearing this makes the selection visual change happen after api call??
             //this.currentItem = null;
-            marketview.clearPriceHistory(this)
+            marketcharts.clearPriceHistory(this)
 
             api.getOrderHistory(item.itemHrid)
                 .then(response => response.json())
                 .then(json => {
                     this.currentItem = JSON.parse(JSON.stringify(json));
-                    marketview.drawItem(this, this.currentItem);
+                    marketcharts.drawItem(this, this.currentItem);
                 })
         },
 
@@ -124,6 +127,7 @@ const app = new Vue({
             await this.loadSaleHistory()
         },
 
+        //does await wait for the promise chain?? can factor draws out of loads??
         loadPlayerInv: function() {
             return api.getPlayerInv(this.profileLink)
                 .then(response => response.json())
@@ -142,6 +146,8 @@ const app = new Vue({
                 .then(response => response.json())
                 .then(json => {
                     this.saleHistory = JSON.parse(JSON.stringify(json));
+                    
+                    profilecharts.drawSaleTable(this, this.saleHistory);
                     return true;
                 })
         }

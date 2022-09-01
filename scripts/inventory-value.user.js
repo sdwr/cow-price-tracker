@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         milky way idle websocket wrapper
+// @name         milky way idle -- inventory value / market history tracker
 // @match      https://milkywayidle.com/game
 // @match      https://www.milkywayidle.com/game
 // @match      https://www.test.milkywayidle.com/game
@@ -9,7 +9,7 @@
 // ==/UserScript==
 
 
-const herokuServer = "https://cow-price-tracker-server.herokuapp.com";
+const prodServer = "https://sdwr.ca";
 const localServer = "http://localhost:8080";
 const postOrderHistory = "/api/orderHistory";
 const postMarketSale = "/api/marketSale";
@@ -30,7 +30,7 @@ let profileLink = null;
 let profileEle = null;
 
 //change for dev/prod
-const useServer = herokuServer
+const useServer = prodServer
 const DEBUG = false
 
 
@@ -70,7 +70,7 @@ const postMarketData = function(data) {
 //    orderQuantity, price, itemHrid, isSell, ... }
 // }
 const postSale = function(data) {
-    data.userID = data.characterID;
+    data.userID = character.userID;
     if(DEBUG) {
         console.log("made buy/sale!");
         console.log(data)
@@ -360,9 +360,3 @@ window.WebSocket = function(...args){
     console.log("added spy to websocket!");
     return socket;
 };
-
-
-
-
-
-
