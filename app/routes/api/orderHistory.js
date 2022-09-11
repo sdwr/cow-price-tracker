@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const CONSTANTS = require('../../constants');
 const PlayerInventory = mongoose.model('PlayerInventory');
 const OrderHistory = mongoose.model('OrderHistory');
+const OrderBook = mongoose.model('OrderBook');
 const Sale = mongoose.model('Sale');
 //const vendorPrices = require('../../vendorPrices');
 
@@ -38,6 +39,64 @@ let LINK_EXPIRATION = 1000 * 3600;
 //         .then(result => res.send(result))
 //         .catch(err => res.status(500),send(err));
 // }
+
+async function transferOrdersToSeparateSchema(req, res) {
+    let allItems = await OrderHistory.find({}, {itemHrid: 1, vendor: 1, latestAsk: 1, latestBid: 1, lastUpdated: 1})
+    
+    req.setTimeout(1000 * 3600 * 3)
+    res.setTimeout(1000 * 3600 * 3)
+
+    for(item of allItems) {
+        let fullItem = await OrderHistory.findOne({itemHrid: item.itemHrid});
+        let orderBooks = fullItem.orderBooks;
+
+        let update = [];
+
+        for(ob of orderBooks) {
+
+            let stats = getStatsFromOrderBook(ob)
+            let bestAsk = stats[0]
+            let bestBid = stats[1]
+            let totalAsks = stats[2]
+            let totalBids = stats[3]
+
+            console.log("pushing book!" + totalAsks)
+            let write = {
+                updateOne: {
+                    "filter": {
+                        "orderHistoryID": fullItem.id,
+                        "itemHrid": fullItem.itemHrid,
+                        "time": ob.time    
+                        },
+                    "update": { $set: {
+                        "orderHistoryID": fullItem.id,
+                        "itemHrid": fullItem.itemHrid,
+                        "bestAsk": bestAsk,
+                        "bestBid": bestBid,
+                        "totalAsks": totalAsks,
+                        "totalBids": totalBids,
+                        "asks": ob.asks,
+                        "bids": ob.bids,
+                        "time": ob.time
+                    }},
+                    "upsert": true
+                }
+            }
+            update.push(write)
+
+            if(update.length > 20) {
+                console.log("saving batch!")
+                await OrderBook.bulkWrite(update)
+                        .then(result => console.log(result))
+                        .catch(err => console.log(err));
+                update = []
+            }
+        }
+        console.log("item done: " + item.itemHrid)
+    }
+
+    console.log("done!")
+}
 
 function getProfileLink(req, res) {
     let userID = req.params.id;
@@ -87,12 +146,33 @@ function getAllItems(req, res) {
         .catch(err => res.status(500).send(err));
 }
 
-function getOrderHistory(req, res) {
+function getFullOrderHistory(req, res) {
     let itemHrid = req.params.id;
     return OrderHistory.findOne({itemHrid: itemHrid})
         .then(result => res.send(result))
         .catch(err => res.status(500).send(err));
 }
+
+function getSmallOrderHistory(req, res) {
+    let itemHrid = req.params.id;
+    return joinOrderHistory(itemHrid, res)
+        .then(result => res.send(result))
+        .catch(err => res.status(500).send(err));
+
+}
+
+async function joinOrderHistory(itemHrid, res) {
+    let item = await OrderHistory.findOne({itemHrid: itemHrid}, {itemHrid: 1, vendor: 1, latestAsk: 1, latestBid: 1, lastUpdated: 1})
+        .catch(err => res.status(500).send(err));
+
+    let orderBooks = await OrderBook.find({orderHistoryID: item.id}, {bestAsk: 1, bestBid: 1, totalAsks: 1, totalBids: 1, time: 1})
+        .catch(err => res.status(500).send(err));
+
+    item.orderBooks = orderBooks;
+    return item
+}
+
+
 
 function appendToOrderHistory(req, res) {
 
@@ -110,31 +190,51 @@ function appendToOrderHistory(req, res) {
     orderBooks.bids = req.body.orderBooks[0].bids;
     orderBooks.time = time;
 
+    return saveOrderHistoryAndOrderBook(itemHrid, orderBooks, res)
+}
 
-    //save best price
-    let ask = -1;
-    let bid = -1;
-    if(orderBooks.asks && orderBooks.asks.length > 0) {
-        ask = orderBooks.asks[0].price;
-    }
-    if(orderBooks.bids && orderBooks.bids.length > 0) {
-        bid = orderBooks.bids[0].price;
-    }
+async function saveOrderHistoryAndOrderBook(itemHrid, orderBooks, res) {
 
-    return OrderHistory.updateOne({itemHrid: itemHrid},
+    let stats = getStatsFromOrderBook(orderBooks)
+    let bestAsk = stats[0]
+    let bestBid = stats[1]
+    let totalAsks = stats[2]
+    let totalBids = stats[3]
+
+    let item = await OrderHistory.findOneAndUpdate({itemHrid: itemHrid},
         {
             $push: {orderBooks: orderBooks},
             $set: 
             {
-                latestAsk: ask,
-                latestBid: bid,
-                lastUpdated: time, 
+                latestAsk: bestAsk,
+                latestBid: bestBid,
+                lastUpdated: orderBooks.time, 
                 itemThumbnail: getThumbnail(itemHrid)
             }
         },
-        { upsert: true}
-    )
-    .then(result => res.send(result))
+        {   upsert: true,
+            new: true,
+            projection: {id: 1, itemHrid: 1, latestAsk: 1, latestBid: 1, lastUpdated: 1}
+        }
+    ).catch(err => res.status(500).send(err))
+
+    return OrderBook.updateOne(
+        {itemHrid: itemHrid, time: orderBooks.time}, 
+        {
+            $set: {
+                "orderHistoryID": item.id,
+                "itemHrid": item.itemHrid,
+                "bestAsk": bestAsk,
+                "bestBid": bestBid,
+                "totalAsks": totalAsks,
+                "totalBids": totalBids,
+                "asks": orderBooks.asks,
+                "bids": orderBooks.bids,
+                "time": orderBooks.time
+            }
+        },
+        {upsert: true}
+    ).then(result => res.send(result))
     .catch(err => res.status(500).send(err));
 
 }
@@ -246,14 +346,34 @@ function getThumbnail(itemHrid) {
     return path;
 }
 
+function getStatsFromOrderBook(ob) {
+    bestAsk = 0
+    bestBid = 0
+    totalAsks = 0
+    totalBids = 0
+
+    if(ob.asks && ob.asks.length > 0) {
+        bestAsk = ob.asks[0].price
+        totalAsks = ob.asks.reduce((prev, curr) => prev + curr.quantity, 0)
+    }
+    if(ob.bids && ob.bids.length > 0) {
+        bestBid = ob.bids[0].price
+        totalBids = ob.bids.reduce((prev, curr) => prev + curr.quantity, 0)
+    }
+
+    return [bestAsk, bestBid, totalAsks, totalBids]
+}
+
 //endpoints
 //router.get('/setVendorPrices', setVendorPrices);
+router.get('/transferOrderBooks', transferOrdersToSeparateSchema);
 router.get('/profileLink/:id', getProfileLink);
 router.get('/profileByLink/:link', getProfileByLink);
 router.get('/saleHistory/:id', getSaleHistory);
 
 router.get('/items', getAllItems);
-router.get('/orderHistory/:id', getOrderHistory);
+router.get('/orderHistory/:id', getSmallOrderHistory);
+router.get('/orderHistory/full/:id', getFullOrderHistory);
 router.post('/orderHistory', appendToOrderHistory);
 
 router.get('/latestPrice', getLatest);

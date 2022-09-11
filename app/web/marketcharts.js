@@ -1,3 +1,4 @@
+const ONE_DAY_IN_MS = 1000* 3600 * 24;
 
 function drawItem(self, item) {
     let data = plotOrderBooks(item);
@@ -89,40 +90,41 @@ function plotOrderBooks(item) {
     };
 
     let currentTime = Date.now();
-    let lowestAsk = -1;
-    let totalAsks = 0;
-    let highestBid = -1;
-    let totalBids = 0;
 
     let orderBooks = item.orderBooks;
-    
+
+    let count = 0
+
     for(let i = 0; i < orderBooks.length; i++) {
         let book = orderBooks[i]
-        let time = new Date(orderBooks[i].time)
-        if(book.asks && book.asks.length > 0) {
-            lowestAsk = book.asks[0].price;
-            totalAsks = book.asks.reduce((prev, curr) => prev + curr.quantity, 0)
+
+        //skip most values before the cutoff time
+        //only draw every value for the most recent day 
+        if(currentTime - book.time > ONE_DAY_IN_MS && count != 8) {
+            count++   
+        } else {
+            count = 0
+            let date = new Date(book.time)
+
 
             //exclude values over 200M
-            if(lowestAsk < 200 * 1000 * 1000) {
+            if(book.bestAsk < 200 * 1000 * 1000) {
             
-                plotAsks.x.push(time)
-                plotAsks.y.push(lowestAsk)
+                plotAsks.x.push(date)
+                plotAsks.y.push(book.bestAsk)
             }
-
-            depthAsks.x.push(time)
-            depthAsks.y.push(totalAsks)
-        }
-        if(book.bids && book.bids.length > 0) {
-            highestBid = book.bids[0].price;
-            totalBids = book.bids.reduce((prev, curr) => prev + curr.quantity, 0)
+            depthAsks.x.push(date)
+            depthAsks.y.push(book.totalAsks)
+    
             
-            plotBids.x.push(time)
-            plotBids.y.push(highestBid)
-
-            depthBids.x.push(time)
-            depthBids.y.push(totalBids)
+            plotBids.x.push(date)
+            plotBids.y.push(book.bestBid)
+    
+            depthBids.x.push(date)
+            depthBids.y.push(book.totalBids)
         }
+
+        
     }
 
     return {plot: [plotAsks, plotBids], depth: [depthAsks, depthBids]}
