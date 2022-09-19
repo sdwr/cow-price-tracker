@@ -12,6 +12,7 @@ const Sale = mongoose.model('Sale');
 let LINK_EXPIRATION = 1000 * 3600;
 
 
+// ONE-TIME DB MODIFICATION
 // function setVendorPrices(req, res) {
 //     let keys = Object.keys(vendorPrices);
 //     let prices = [];
@@ -40,63 +41,64 @@ let LINK_EXPIRATION = 1000 * 3600;
 //         .catch(err => res.status(500),send(err));
 // }
 
-async function transferOrdersToSeparateSchema(req, res) {
-    let allItems = await OrderHistory.find({}, {itemHrid: 1, vendor: 1, latestAsk: 1, latestBid: 1, lastUpdated: 1})
+// ONE-TIME DB MODIFICATION
+// async function transferOrdersToSeparateSchema(req, res) {
+//     let allItems = await OrderHistory.find({}, {itemHrid: 1, vendor: 1, latestAsk: 1, latestBid: 1, lastUpdated: 1})
     
-    req.setTimeout(1000 * 3600 * 3)
-    res.setTimeout(1000 * 3600 * 3)
+//     req.setTimeout(1000 * 3600 * 3)
+//     res.setTimeout(1000 * 3600 * 3)
 
-    for(item of allItems) {
-        let fullItem = await OrderHistory.findOne({itemHrid: item.itemHrid});
-        let orderBooks = fullItem.orderBooks;
+//     for(item of allItems) {
+//         let fullItem = await OrderHistory.findOne({itemHrid: item.itemHrid});
+//         let orderBooks = fullItem.orderBooks;
 
-        let update = [];
+//         let update = [];
 
-        for(ob of orderBooks) {
+//         for(ob of orderBooks) {
 
-            let stats = getStatsFromOrderBook(ob)
-            let bestAsk = stats[0]
-            let bestBid = stats[1]
-            let totalAsks = stats[2]
-            let totalBids = stats[3]
+//             let stats = getStatsFromOrderBook(ob)
+//             let bestAsk = stats[0]
+//             let bestBid = stats[1]
+//             let totalAsks = stats[2]
+//             let totalBids = stats[3]
 
-            console.log("pushing book!" + totalAsks)
-            let write = {
-                updateOne: {
-                    "filter": {
-                        "orderHistoryID": fullItem.id,
-                        "itemHrid": fullItem.itemHrid,
-                        "time": ob.time    
-                        },
-                    "update": { $set: {
-                        "orderHistoryID": fullItem.id,
-                        "itemHrid": fullItem.itemHrid,
-                        "bestAsk": bestAsk,
-                        "bestBid": bestBid,
-                        "totalAsks": totalAsks,
-                        "totalBids": totalBids,
-                        "asks": ob.asks,
-                        "bids": ob.bids,
-                        "time": ob.time
-                    }},
-                    "upsert": true
-                }
-            }
-            update.push(write)
+//             console.log("pushing book!" + totalAsks)
+//             let write = {
+//                 updateOne: {
+//                     "filter": {
+//                         "orderHistoryID": fullItem.id,
+//                         "itemHrid": fullItem.itemHrid,
+//                         "time": ob.time    
+//                         },
+//                     "update": { $set: {
+//                         "orderHistoryID": fullItem.id,
+//                         "itemHrid": fullItem.itemHrid,
+//                         "bestAsk": bestAsk,
+//                         "bestBid": bestBid,
+//                         "totalAsks": totalAsks,
+//                         "totalBids": totalBids,
+//                         "asks": ob.asks,
+//                         "bids": ob.bids,
+//                         "time": ob.time
+//                     }},
+//                     "upsert": true
+//                 }
+//             }
+//             update.push(write)
 
-            if(update.length > 20) {
-                console.log("saving batch!")
-                await OrderBook.bulkWrite(update)
-                        .then(result => console.log(result))
-                        .catch(err => console.log(err));
-                update = []
-            }
-        }
-        console.log("item done: " + item.itemHrid)
-    }
+//             if(update.length > 20) {
+//                 console.log("saving batch!")
+//                 await OrderBook.bulkWrite(update)
+//                         .then(result => console.log(result))
+//                         .catch(err => console.log(err));
+//                 update = []
+//             }
+//         }
+//         console.log("item done: " + item.itemHrid)
+//     }
 
-    console.log("done!")
-}
+//     console.log("done!")
+// }
 
 function getProfileLink(req, res) {
     let userID = req.params.id;
@@ -366,7 +368,7 @@ function getStatsFromOrderBook(ob) {
 
 //endpoints
 //router.get('/setVendorPrices', setVendorPrices);
-router.get('/transferOrderBooks', transferOrdersToSeparateSchema);
+//router.get('/transferOrderBooks', transferOrdersToSeparateSchema);
 router.get('/profileLink/:id', getProfileLink);
 router.get('/profileByLink/:link', getProfileByLink);
 router.get('/saleHistory/:id', getSaleHistory);
